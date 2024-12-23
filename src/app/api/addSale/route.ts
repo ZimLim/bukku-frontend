@@ -24,11 +24,11 @@ export async function POST(request: Request) {
     const purchaseDoc = await purchase.findOne({"date": result.date})
     const saleDoc = await sale.findOne({"date": result.date})
     if (purchaseDoc || saleDoc){
-      return Response.json({message: "Transaction already made today"})
+      return Response.json({status: 400, message: "Transaction already made today"})
     }else{
       const res = await sale.insertOne(documentBody)
       await inventory.findOneAndUpdate({},{
-        $inc: { totalGoods: -result.quantity, totalValue: -(result.price * result.quantity) },
+        $inc: { totalGoods: -result.quantity, totalValue: -Number((result.totalCost).toFixed(2)) },
       })
       return Response.json(res);
     }
@@ -37,4 +37,21 @@ export async function POST(request: Request) {
   }
 
 }
+
+export async function GET(request: Request) {
+  const uri = process.env.MONGODB_URI ? process.env.MONGODB_URI : ""
+  const client = new MongoClient(uri)
+  try {
+    await client.connect()
+    const db = client.db("bukku")
+    
+    const sale = db.collection("sale")
+    const data = await sale.find({}).toArray();
+    console.log(data)
+    return Response.json({data})
+  }catch(err){
+    return Response.json({status: 500, message: "ha?"})
+  }
+}
+
 

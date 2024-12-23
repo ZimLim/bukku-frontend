@@ -26,12 +26,18 @@ const AddPurchase: React.FC = () => {
             [name]: name == 'date' ? value : Number(value)
           }));
     }
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>  {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) =>  {
         event.preventDefault()
-        fetch('/api/addPurchase', {
+        const res = await fetch('/api/addPurchase', {
             method:"POST",
             body: JSON.stringify(formData)
         })
+        const data = await res.json()
+
+
+        if( data.status === 400){
+            alert(data.message)
+        }
     }
     
     return (

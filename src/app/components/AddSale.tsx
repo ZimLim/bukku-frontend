@@ -53,7 +53,7 @@ const AddSale: React.FC = () => {
             [name]: name == 'date' ? value : Number(value)
           }))
     }
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) =>  {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) =>  {
         event.preventDefault()
 
         if(Number(formData.quantity) > totalGoods){
@@ -64,10 +64,14 @@ const AddSale: React.FC = () => {
                 totalAmount: Number(formData.price) * Number(formData.quantity),
                 totalCost: averageCost * Number(formData.quantity)
             }
-            const data = fetch('/api/addSale', {
+            const res = await fetch('/api/addSale', {
                 method:"POST",
                 body: JSON.stringify(body)
             })
+            const data = await res.json()
+            if (data.status === 400){
+                alert(data.message)
+            }
         }
     }
     

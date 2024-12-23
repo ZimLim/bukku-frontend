@@ -2,12 +2,15 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import AddPurchase from "./components/AddPurchase";
 import AddSale from "./components/AddSale";
+import TransactionInfo from "./components/TransactionsInfo";
+import TransactionTable from "./components/TransactionsTable";
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
         <AddPurchase></AddPurchase>
         <AddSale></AddSale>
+        <TransactionTable></TransactionTable>
         <div className={styles.ctas}>
           <a
             className={styles.primary}

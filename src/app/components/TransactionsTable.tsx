@@ -7,6 +7,8 @@ import {
     Paper,
  } from '@mui/material';
 
+
+ // Defining the schema of the table for both Purchase and Sale records
  const purchaseColumns: GridColDef[] = [
     { field: '_id', headerName: 'ID', width: 90 },
     {
@@ -70,29 +72,23 @@ const TransactionTable: React.FC = () => {
     const [showSaleTable, setShowSaleTable] = useState(false)
     
     useEffect(() => {
-        const getPurchaseData = async () => {
+        const getData = async () => {
             const res = await fetch('/api/addPurchase', {
                 method: "GET"
             })
             const data = await res.json()
-            setPurchaseData(data.data)
+            setPurchaseData(data.purchases)
+            setSaleData(data.sales)
         }
-        const getSaleData = async () => {
-            const res = await fetch('/api/addSale', {
-                method: "GET"
-            })
-            const data = await res.json()
-            setSaleData(data.data)
-        }
-        getPurchaseData()
-        getSaleData()
+        getData()
+        
         return () => {
-            // Returning blank when component unmounts
+            // Cleanup function
         }    
     }, [showPurchaseTable, showSaleTable])
     
     const handleClick = async (transaction: string) => {
-        
+        // Opens/closes a table and opens/close the other
         if(transaction == 'purchase'){
             if(showPurchaseTable){
                 setShowPurchaseTable(!showPurchaseTable)

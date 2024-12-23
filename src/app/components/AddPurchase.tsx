@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { TextField, Box, Select, MenuItem, SelectChangeEvent, Button, FormControl } from '@mui/material';
+import { TextField, Box, Button } from '@mui/material';
 
 
 interface FormData {
@@ -8,6 +8,7 @@ interface FormData {
     quantity: number | "";
     price: number | "";
     totalValue: number | "";
+    transactionType: string
 }
 
 const AddPurchase: React.FC = () => {
@@ -15,12 +16,13 @@ const AddPurchase: React.FC = () => {
         date: new Date(Date.now()).toISOString().split('T')[0],
         quantity: 0,
         price: 0,
-        totalValue: 0.0
+        totalValue: 0.0,
+        transactionType: "purchase"
     })
     
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        
         const {name, value} = event.target
-
         setFormData(prevState => ({
             ...prevState,
             [name]: name == 'date' ? value : Number(value)
@@ -50,10 +52,10 @@ const AddPurchase: React.FC = () => {
                 sx={{
                     // Apply a margin to all direct children
                     '& > *': {
-                    m: 1,  // m is shorthand for margin
+                    m: 1.5,
                     },
                     background:"white",
-                    margin: 3
+                    margin: 4
                 }}
             >
                 <TextField
@@ -81,6 +83,8 @@ const AddPurchase: React.FC = () => {
                     defaultValue={formData.price.toString()}
                     onChange={handleChange}
                 />
+
+                {/* Value is calculated and included to be used for double-checking the inputs */}
                 <TextField
                     label='Total Value (RM)'
                     name='totalValue'

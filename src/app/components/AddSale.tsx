@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { TextField, Box, Select, MenuItem, SelectChangeEvent, Button, FormControl } from '@mui/material';
+import { TextField, Box, Button } from '@mui/material';
 
 
 interface FormData {
@@ -9,6 +9,7 @@ interface FormData {
     price: number | "";
     totalAmount: number | "";
     totalCost: number | "";
+    transactionType: string;
 }
 
 interface Inventory {
@@ -24,7 +25,8 @@ const AddSale: React.FC = () => {
         quantity: 0,
         price: 0.0,
         totalAmount: 0.0,
-        totalCost: 0.0
+        totalCost: 0.0,
+        transactionType: "sale"
     })
 
     // useEffect() to get current Weighted Average Cost from DB
@@ -56,6 +58,7 @@ const AddSale: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) =>  {
         event.preventDefault()
 
+        // Assuming user cannot sell more than what they have in inventory
         if(Number(formData.quantity) > totalGoods){
             alert("You're selling more than amount you have in inventory")
         }else{
@@ -64,7 +67,7 @@ const AddSale: React.FC = () => {
                 totalAmount: Number(formData.price) * Number(formData.quantity),
                 totalCost: averageCost * Number(formData.quantity)
             }
-            const res = await fetch('/api/addSale', {
+            const res = await fetch('/api/addPurchase', {
                 method:"POST",
                 body: JSON.stringify(body)
             })
@@ -85,7 +88,7 @@ const AddSale: React.FC = () => {
                 sx={{
                     // Apply a margin to all direct children
                     '& > *': {
-                    m: 1,  // m is shorthand for margin
+                    m: 1.5, 
                     },
                     background:"white",
                     margin: 4
